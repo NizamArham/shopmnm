@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop the catalog — M&amp;M Clothing</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="wrap">
+    <!-- Wordmark Logo -->
+    <a href="index.html" class="wordmark">
+      M&M<span>Clothing</span>  
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="catalog.html">Shop</a>
+      <a href="about.html" class="hide-mobile">About</a>
+      <button id="open-cart" class="cart-btn" aria-label="Open cart">
+        Bag <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="section-head" style="margin-top:40px;">
+    <h2>Full catalog</h2>
+  </div>
+
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-pill active" data-filter="gender" data-value="">All</button>
+    <button class="filter-pill" data-filter="gender" data-value="Male">Men</button>
+    <button class="filter-pill" data-filter="gender" data-value="Female">Women</button>
+    <button class="filter-pill" data-filter="gender" data-value="Unisex">Unisex</button>
+    <input type="text" class="search-input" id="search-input" placeholder="Search products...">
+  </div>
+
+  <div class="filter-bar" id="category-bar" style="margin-top:-16px;"></div>
+
+  <div class="grid" id="catalog-grid"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    
+    <span>Questions? <a href="about.html" style="color:var(--green); font-weight:600;">Get in touch</a></span>
+    <!-- Logo right -->
+    <a href="index.html" class="logo-link">
+      <img src="images/NameLogo.png" alt="M&amp;M Clothing" style="height: 30px; width: auto; display: block;">
+    </a>
+  </div>
+</footer>
+
+<div class="overlay" id="cart-overlay"></div>
+<aside class="drawer" id="cart-drawer">
+  <div class="drawer-head">
+    <h3>Your bag</h3>
+    <button class="drawer-close" id="close-cart" aria-label="Close cart">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawer-items"></div>
+  <div class="drawer-foot" id="drawer-foot">
+    <div class="drawer-total"><span>Total</span><span id="drawer-total-amount">Rs. 0</span></div>
+    <button class="btn clay" id="whatsapp-checkout">Send order on WhatsApp</button>
+    <div class="drawer-hint">We'll reply on WhatsApp to confirm details and delivery.</div>
+  </div>
+</aside>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/render.js"></script>
+<script src="js/catalog.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

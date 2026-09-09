@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — M&amp;M Clothing</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <!-- Wordmark Logo -->
+    <a href="index.html" class="wordmark">
+   M&M<span>Clothing</span>  
+    </a>
+    <nav class="main-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="catalog.html">Shop</a>
+      <a href="about.html" class="hide-mobile">About</a>
+      <button id="open-cart" class="cart-btn" aria-label="Open cart">
+        Bag <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="about-content">
+    <h1>Handpicked, not mass-produced.</h1>
+    <p>M&amp;M Clothing is a curated fashion retailer based in Sri Lanka. Every piece on this site has been personally selected — a mix of well-known international brands and quality factory finds sourced directly, so you get authentic, stylish wear without paying for a middleman's markup.</p>
+    <p>This catalog is here so you can browse everything we currently have without messaging us item by item. Add whatever catches your eye to your bag, then send it over on WhatsApp — we'll confirm stock, pricing, and delivery with you directly from there.</p>
+    <p>No online payment, no account needed. Just browse, add, and message us.</p>
+    <a class="btn clay" href="https://wa.me/94705500174" target="_blank" rel="noopener">Message us on WhatsApp</a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    
+    <span>Questions? <a href="about.html" style="color:var(--green); font-weight:600;">Get in touch</a></span>
+    <!-- Logo right -->
+    <a href="index.html" class="logo-link">
+      <img src="images/NameLogo.png" alt="M&amp;M Clothing" style="height: 30px; width: auto; display: block;">
+    </a>
+  </div>
+</footer>
+
+<div class="overlay" id="cart-overlay"></div>
+<aside class="drawer" id="cart-drawer">
+  <div class="drawer-head">
+    <h3>Your bag</h3>
+    <button class="drawer-close" id="close-cart" aria-label="Close cart">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawer-items"></div>
+  <div class="drawer-foot" id="drawer-foot">
+    <div class="drawer-total"><span>Total</span><span id="drawer-total-amount">Rs. 0</span></div>
+    <button class="btn clay" id="whatsapp-checkout">Send order on WhatsApp</button>
+    <div class="drawer-hint">We'll reply on WhatsApp to confirm details and delivery.</div>
+    
+  </div>
+
+  
+
+</aside>
+
+<script src="js/data.js"></script>
+<script src="js/cart.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
