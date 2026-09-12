@@ -2098,6 +2098,32 @@
 
 
 
+
+{
+  id: "MM005",
+  name: "Horizon Bermuda Shorts",
+  gender: "Female",
+  category: "Shorts",
+  subCategory: "Quickdry Shorts",
+  price: 2520,
+  description: "Lightweight quick-dry bermuda shorts with a relaxed fit — easy care, great for hot days.",
+  colors: ["Black", "Gray", "Light Green", "Pastel Green"],
+  sizes: [
+    { size: "ONE SIZE", color: "Black", stock: 1 },
+    { size: "UK 6", color: "Black", stock: 3 },
+    { size: "UK 0", color: "Gray", stock: 1 },
+    { size: "UK 10", color: "Gray", stock: 1 },
+    { size: "M", color: "Light Green", stock: 1 },
+    { size: "S", color: "Pastel Green", stock: 1 }
+  ],
+  badge: "",
+  images: [
+    "images/products/MM006/1.jpg",
+    "images/products/MM006/2.jpg",
+    "images/products/MM006/3.jpg"
+  ]
+},
+
   {
     id: "MM001",
     name: "BR Business Casual Pants — Navy",
@@ -2123,7 +2149,7 @@
     badge: "Factory Outlet",
     images: [
       "images/products/MM001/1.jpg",
-      "images/products/MM001/2.jpg",
+      //"images/products/MM001/2.jpg",
       "images/products/MM001/3.jpg"
     ]
   },
@@ -2218,6 +2244,72 @@
       "images/products/MM004/3.jpg"
     ]
   },
+
+
+  {
+  id: "MM005",
+  name: "Ribcage Straight Ankle Jeans — Dark Wash",
+  gender: "Female",
+  category: "Jeans",
+  subCategory: "Denim",
+  price: 5490,
+  description: "A straight, ankle-length fit in a dark wash denim with a high rise. Part of our handpicked selection — quality pieces without the middleman markup.",
+  colors: ["Dark Wash"],
+  sizes: [
+    { size: "24/29", stock: 1 },
+    { size: "27/27", stock: 1 },
+    { size: "27/31", stock: 1 },
+    { size: "28/31", stock: 1 },
+    { size: "29/27", stock: 1 },
+    { size: "29/31", stock: 1 }
+  ],
+  images: [
+    "images/products/MM005/1.jpg",
+    "images/products/MM005/2.jpg",
+    "images/products/MM005/3.jpg"
+  ]
+},
+{
+  id: "MM006",
+  name: "Utility Cargo Shorts",
+  gender: "Male",
+  category: "Shorts",
+  subCategory: "Cargo Shorts",
+  price: 4850,
+  description: "Quick-dry utility cargo shorts with multiple pockets — built for function without sacrificing style.",
+  colors: ["Black", "Olive"],
+  sizes: [
+    { size: "L", color: "Black", stock: 1 },
+    { size: "S", color: "Olive", stock: 1 },
+    { size: "XL", color: "Olive", stock: 1 }
+  ],
+  badge: "",
+  images: [
+    "images/products/MM007/1.jpg",
+    "images/products/MM007/2.jpg",
+    "images/products/MM007/3.jpg"
+  ]
+},
+
+{
+  id: "MM008",
+  name: "Parachute Pants",
+  gender: "Male",
+  category: "Pants & Chinos",
+  subCategory: "Cargo",
+  price: 7390,
+  description: "Relaxed parachute-fit pants in a camo print, with a drawstring waist and cargo-style pockets.",
+  colors: ["Camo"],
+  sizes: [
+    { size: "34/32", color: "Camo", stock: 1 }
+  ],
+  badge: "",
+  images: [
+    "images/products/MM008/1.jpg",
+    "images/products/MM008/2.jpg",
+    "images/products/MM008/3.jpg"
+  ]
+}
 
 
   //   // ============================================================

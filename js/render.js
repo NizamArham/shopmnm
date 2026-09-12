@@ -1,6 +1,9 @@
 function productCardHTML(p) {
   const img = (p.images && p.images[0]) || "images/placeholder.svg";
-  const soldOut = p.stock <= 0;
+  const totalStock = Array.isArray(p.sizes)
+    ? p.sizes.reduce((sum, s) => sum + (s.stock || 0), 0)
+    : (p.stock || 0);
+  const soldOut = totalStock <= 0;
   return `
     <a class="card-link" href="product.html?id=${p.id}">
       <article class="card">
