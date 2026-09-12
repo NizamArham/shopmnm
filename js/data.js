@@ -2100,7 +2100,7 @@
 
 
 {
-  id: "MM005",
+  id: "MM006",
   name: "Horizon Bermuda Shorts",
   gender: "Female",
   category: "Shorts",
@@ -2270,7 +2270,7 @@
   ]
 },
 {
-  id: "MM006",
+  id: "MM007",
   name: "Utility Cargo Shorts",
   gender: "Male",
   category: "Shorts",
