@@ -2257,7 +2257,7 @@
   colors: ["Dark Wash"],
   sizes: [
     { size: "24/29", stock: 1 },
-    { size: "27/27", stock: 1 },
+    { size: "27/27", stock: 0 },
     { size: "27/31", stock: 1 },
     { size: "28/31", stock: 1 },
     { size: "29/27", stock: 1 },
