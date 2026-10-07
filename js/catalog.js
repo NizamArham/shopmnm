@@ -11,7 +11,7 @@ function buildCategoryPills() {
 }
 
 function matchesState(p) {
-  if (state.gender && p.gender !== state.gender) return false;
+  if (state.gender && p.gender !== state.gender && p.gender !== "Unisex") return false;
   if (state.category && p.category !== state.category) return false;
   if (state.query) {
     const q = state.query.toLowerCase();
