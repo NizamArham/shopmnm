@@ -1,16 +1,18 @@
-// One-time "factory outlet & imported" notice. Shown once per browser; add ?notice to any page URL to see it again.
+// "Factory outlet & imported" notice. Shown on the first page of a visit and on every refresh; add ?notice to force it.
 (function () {
   const KEY = "mm_notice_seen";
   const force = new URLSearchParams(window.location.search).has("notice");
+  const nav = performance.getEntriesByType("navigation")[0];
+  const isReload = !!nav && nav.type === "reload";
 
   function seen() {
-    try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; }
+    try { return sessionStorage.getItem(KEY) === "1"; } catch (e) { return false; }
   }
   function remember() {
-    try { localStorage.setItem(KEY, "1"); } catch (e) {}
+    try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
   }
 
-  if (seen() && !force) return;
+  if (seen() && !force && !isReload) return;
 
   const modal = document.createElement("div");
   modal.className = "notice-overlay";
