@@ -2240,9 +2240,7 @@
     ],
     badge: "Factory Outlet",
     images: [
-      "images/products/MM004/1.jpg",
-      "images/products/MM004/2.jpg",
-      "images/products/MM004/3.jpg"
+      "images/products/MM004/1.jpg"
     ]
   },
 
@@ -2286,9 +2284,9 @@
   ],
   badge: "",
   images: [
-    "images/products/MM007/1.jpg",
-    "images/products/MM007/2.jpg",
-    "images/products/MM007/3.jpg"
+    "images/products/MM007/1.JPG",
+    "images/products/MM007/2.JPG",
+    "images/products/MM007/3.JPG"
   ]
 },
 
@@ -2302,7 +2300,7 @@
   description: "Relaxed parachute-fit pants in a camo print, with a drawstring waist and cargo-style pockets.",
   colors: ["Camo"],
   sizes: [
-    { size: "34/32", color: "Camo", stock: 1 }
+    { size: "34/32", color: "Camo", stock: 0 }
   ],
   badge: "",
   images: [

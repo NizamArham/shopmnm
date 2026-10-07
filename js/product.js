@@ -30,10 +30,11 @@ function renderProduct(p) {
   // Total remaining stock for this product
   const totalStock = sizeOptions.reduce((sum, s) => sum + s.stock, 0);
   const remaining = Math.max(0, totalStock - alreadyInCart);
-  const soldOut = totalStock <= 0 || remaining <= 0;
+  const isSold = totalStock <= 0;
+  const soldOut = isSold || remaining <= 0;
 
   // Color chips
-  const colorChips = p.colors.length
+  const colorChips = !isSold && p.colors.length
     ? `<div class="option-group">
         <div class="option-label">Color</div>
         <div class="chip-row" id="color-chips">
@@ -43,7 +44,7 @@ function renderProduct(p) {
     : "";
 
   // Size chips — out of stock = locked (greyed, not clickable, no pointer events)
-  const sizeChips = sizeOptions.length
+  const sizeChips = !isSold && sizeOptions.length
     ? `<div class="option-group">
         <div class="option-label">Size (Waist/Inseam)</div>
         <div class="chip-row size-chip-row" id="size-chips">
@@ -76,7 +77,9 @@ function renderProduct(p) {
 
   // Stock note logic
   let stockNote;
-  if (soldOut) {
+  if (isSold) {
+    stockNote = "This piece has been sold. Message us on WhatsApp if you'd like something similar.";
+  } else if (soldOut) {
     stockNote = "Currently sold out. Check back soon or ask us on WhatsApp.";
   } else if (remaining <= 3) {
     stockNote = `Only ${remaining} left in stock — order soon!`;
@@ -85,7 +88,11 @@ function renderProduct(p) {
   }
 
   // Badge — dynamic from product data
-  const badgeHTML = p.badge ? `
+  const badgeHTML = isSold ? `
+    <span style="background:#222; color:#fff; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">
+      Sold
+    </span>
+  ` : p.badge ? `
     <span style="background:#e8f5e9; color:#2e7d32; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">
       ${p.badge}
     </span>
@@ -106,16 +113,16 @@ function renderProduct(p) {
       <div>
         <div class="pd-cat">${p.category} &middot; ${p.subCategory} &middot; ${p.gender}</div>
         <h1 class="pd-name">${p.name}</h1>
-        <div class="pd-price">Rs. ${p.price.toLocaleString("en-LK")}</div>
-        
+        ${isSold ? "" : `<div class="pd-price">Rs. ${p.price.toLocaleString("en-LK")}</div>`}
+
         <!-- Dynamic Badge -->
         ${badgeHTML}
-        
+
         <p class="pd-desc">${p.description}</p>
         ${colorChips}
         ${sizeChips}
-        
-        <div class="option-group">
+
+        ${isSold ? "" : `<div class="option-group">
           <div class="option-label">Quantity</div>
           <div class="qty-row">
             <div class="qty-control">
@@ -124,12 +131,12 @@ function renderProduct(p) {
               <button id="qty-plus" aria-label="Increase quantity" ${soldOut || maxQty <= 1 ? "disabled" : ""}>&plus;</button>
             </div>
           </div>
-        </div>
-        
+        </div>`}
+
         <div class="pd-actions">
           ${!soldOut && maxQty > 0
             ? `<button class="btn clay" id="add-to-cart-btn">Add to bag</button>`
-            : `<button class="btn secondary" disabled>${soldOut ? "Sold out" : "No stock for this size"}</button>`}
+            : `<button class="btn secondary" disabled>${isSold ? "Sold" : soldOut ? "Sold out" : "No stock for this size"}</button>`}
           <a href="catalog.html" class="btn secondary">Keep browsing</a>
         </div>
         <p class="stock-note" id="stock-note">${stockNote}</p>
@@ -262,12 +269,30 @@ function renderProduct(p) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Keep only the listed images that actually exist, so a folder with 1 or 2 photos shows 1 or 2.
+function existingImages(list) {
+  return Promise.all(
+    list.map(
+      (src) =>
+        new Promise((resolve) => {
+          const im = new Image();
+          im.onload = () => resolve(src);
+          im.onerror = () => resolve(null);
+          im.src = src;
+        })
+    )
+  ).then((found) => found.filter(Boolean));
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
   const product = getProductFromURL();
   if (!product) {
     renderNotFound();
     return;
   }
   document.title = `${product.name} — M&M Clothing`;
+  if (product.images && product.images.length) {
+    product.images = await existingImages(product.images);
+  }
   renderProduct(product);
 });
