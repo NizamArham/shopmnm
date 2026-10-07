@@ -62,7 +62,7 @@ function renderProduct(p) {
             `;
           }).join("")}
         </div>
-        <div style="margin-top:8px; font-size:12px; color:var(--ink-soft);">${sizeOptions.length} sizes available</div>
+        <div style="margin-top:8px; font-size:12px; color:var(--ink-soft);">${sizeOptions.filter((s) => s.stock > 0).length} sizes available</div>
       </div>`
     : "";
 

@@ -2110,7 +2110,7 @@
   colors: ["Black", "Gray", "Light Green", "Pastel Green"],
   sizes: [
     { size: "ONE SIZE", color: "Black", stock: 1 },
-    { size: "UK 6", color: "Black", stock: 3 },
+    { size: "UK 6", color: "Black", stock: 2 },
     { size: "UK 0", color: "Gray", stock: 1 },
     { size: "UK 10", color: "Gray", stock: 1 },
     { size: "M", color: "Light Green", stock: 1 },
@@ -2134,17 +2134,17 @@
     description: "Premium fabric with a tailored fit. Perfect for office wear and formal occasions.",
     colors: ["Navy"],
     sizes: [
-      { size: "28/28", stock: 1 },
+      { size: "28/28", stock: 0 },
       { size: "30/32", stock: 1 },
       { size: "31/32", stock: 2 },
       { size: "32/30", stock: 8 },
-      { size: "33/30", stock: 1 },
+      { size: "33/30", stock: 0 },
       { size: "34/32", stock: 1 },
       { size: "34/30", stock: 2 },
       { size: "36/34", stock: 4 },
       { size: "36/30", stock: 2 },
       { size: "36/32", stock: 1 },
-      { size: "38/32", stock: 1 }
+      { size: "38/32", stock: 0 }
     ],
     badge: "Factory Outlet",
     images: [
@@ -2174,7 +2174,7 @@
       { size: "36/32", stock: 1 },
       { size: "36/34", stock: 2 },
       { size: "36/30", stock: 1 },
-      { size: "38/34", stock: 1 },
+      { size: "38/34", stock: 0 },
       { size: "38/30", stock: 1 },
       { size: "42/32", stock: 1 }
     ],
@@ -2196,12 +2196,13 @@
     colors: ["Brown"],
     sizes: [
       
+      { size: "28/28", stock: 1 },
       { size: "29/32", stock: 2 },
       { size: "30/30", stock: 1 },
       { size: "31/30", stock: 1 },
-      { size: "32/34", stock: 1 },
+      { size: "32/34", stock: 0 },
       { size: "33/32", stock: 1 },
-      { size: "33/30", stock: 1 },
+      { size: "33/30", stock: 0 },
       { size: "34/34", stock: 2 },
       { size: "34/30", stock: 4 },
       { size: "35/30", stock: 2 },
@@ -2212,7 +2213,7 @@
       { size: "36/30", stock: 2 },
       { size: "38/30", stock: 1 },
       { size: "38/34", stock: 1 },
-      { size: "38/32", stock: 2 },
+      { size: "38/32", stock: 1 },
       { size: "40/34", stock: 1 }
     ],
     badge: "Factory Outlet",
@@ -2280,7 +2281,7 @@
   sizes: [
     { size: "L", color: "Black", stock: 1 },
     { size: "S", color: "Olive", stock: 1 },
-    { size: "XL", color: "Olive", stock: 1 }
+    { size: "XL", color: "Olive", stock: 0 }
   ],
   badge: "",
   images: [
