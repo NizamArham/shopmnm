@@ -2332,6 +2332,32 @@
     "images/products/women/pants-chinos/elastic-waist-pant/MM009/3.jpg",
     "images/products/women/pants-chinos/elastic-waist-pant/MM009/4.jpg"
   ]
+},
+
+{
+  id: "MM010",
+  name: "Regular Fit 3-Pack Mix T-Shirts",
+  gender: "Male",
+  category: "T-Shirts & Polos",
+  subCategory: "Cotton Tees",
+  price: 2950,
+  description: "A pack of three regular-fit cotton tees in mixed colours from Hawes & Curtis — everyday basics at a great value.",
+  colors: ["Mix"],
+  sizes: [
+    { size: "S", color: "Mix", stock: 3 },
+    { size: "M", color: "Mix", stock: 6 },
+    { size: "L", color: "Mix", stock: 9 },
+    { size: "XL", color: "Mix", stock: 3 },
+    { size: "XXL", color: "Mix", stock: 3 }
+  ],
+  badge: "",
+  images: [
+    "images/products/men/t-shirts-polos/cotton-tees/MM010/1.jpg",
+    "images/products/men/t-shirts-polos/cotton-tees/MM010/2.jpg",
+    "images/products/men/t-shirts-polos/cotton-tees/MM010/3.jpg",
+    "images/products/men/t-shirts-polos/cotton-tees/MM010/4.jpg",
+    "images/products/men/t-shirts-polos/cotton-tees/MM010/5.jpg"
+  ]
 }
 
 
