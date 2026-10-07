@@ -2105,7 +2105,7 @@
   gender: "Female",
   category: "Shorts",
   subCategory: "Quickdry Shorts",
-  price: 2520,
+  price: 2500,
   description: "Lightweight quick-dry bermuda shorts with a relaxed fit — easy care, great for hot days.",
   colors: ["Black", "Gray", "Light Green", "Pastel Green"],
   sizes: [
@@ -2340,7 +2340,7 @@
   gender: "Male",
   category: "T-Shirts & Polos",
   subCategory: "Cotton Tees",
-  price: 2950,
+  price: 3550,
   description: "A pack of three regular-fit cotton tees in mixed colours from Hawes & Curtis — everyday basics at a great value.",
   colors: ["Mix"],
   sizes: [
