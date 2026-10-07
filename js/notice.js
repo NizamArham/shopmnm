@@ -18,10 +18,10 @@
     <div class="notice-box" role="dialog" aria-modal="true" aria-labelledby="notice-title">
       <button class="notice-close" aria-label="Close">&times;</button>
       <span class="notice-eyebrow">Good to know</span>
-      <h2 id="notice-title">Factory outlet &amp; imported pieces</h2>
-      <p>Our collection includes factory outlet and imported stock. Most pieces have no damages.</p>
-      <p>Want to know more about a piece before you order? Just ask us on WhatsApp.</p>
-      <button class="btn clay notice-ok">Got it, let me browse</button>
+      <h2 id="notice-title">Factory Outlet &amp; Imported Pieces</h2>
+      <p>Our collection features factory outlet and imported pieces, handpicked with care so you can shop with confidence.</p>
+      <p>Have a question about a piece? Message us on WhatsApp &mdash; we're happy to help.</p>
+      <button class="btn notice-ok">Got it, let me browse</button>
     </div>`;
 
   function close() {

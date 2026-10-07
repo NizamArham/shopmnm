@@ -941,7 +941,7 @@ button { font-family: inherit; cursor: pointer; }
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--clay);
+  color: var(--ink);
   margin-bottom: 8px;
 }
 
@@ -963,6 +963,10 @@ button { font-family: inherit; cursor: pointer; }
   margin-top: 12px;
   width: 100%;
   justify-content: center;
+}
+
+.notice-box .btn:hover {
+  background: #000;
 }
 
 .notice-close {
