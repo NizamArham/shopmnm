@@ -2309,6 +2309,29 @@
     "images/products/MM008/2.jpg",
     "images/products/MM008/3.jpg"
   ]
+},
+
+{
+  id: "MM009",
+  name: "Logo Waist Loose Trousers",
+  gender: "Female",
+  category: "Pants & Chinos",
+  subCategory: "Elastic Waist Pant",
+  price: 3450,
+  description: "Relaxed, loose-fit trousers with a soft elastic waistband and logo detail — easy to wear all day.",
+  colors: ["Black"],
+  sizes: [
+    { size: "XXS", color: "Black", stock: 3 },
+    { size: "XS", color: "Black", stock: 0 },
+    { size: "S", color: "Black", stock: 1 }
+  ],
+  badge: "Factory Outlet",
+  images: [
+    "images/products/women/pants-chinos/elastic-waist-pant/MM009/1.webp",
+    "images/products/women/pants-chinos/elastic-waist-pant/MM009/2.webp",
+    "images/products/women/pants-chinos/elastic-waist-pant/MM009/3.jpg",
+    "images/products/women/pants-chinos/elastic-waist-pant/MM009/4.jpg"
+  ]
 }
 
 
