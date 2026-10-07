@@ -2321,9 +2321,10 @@
   description: "Relaxed, loose-fit trousers with a soft elastic waistband and logo detail — easy to wear all day.",
   colors: ["Black"],
   sizes: [
-    { size: "XXS", color: "Black", stock: 3 },
-    { size: "XS", color: "Black", stock: 0 },
-    { size: "S", color: "Black", stock: 1 }
+    { size: "XXS", color: "Black", stock: 18 },
+    { size: "XS", color: "Black", stock: 20 },
+    { size: "S", color: "Black", stock: 11 },
+    { size: "M", color: "Black", stock: 5 }
   ],
   badge: "Factory Outlet",
   images: [

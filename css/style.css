@@ -911,3 +911,67 @@ button { font-family: inherit; cursor: pointer; }
     height: 30px;
   }
 }
+
+/* ---------- First-visit notice ---------- */
+
+.notice-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 27, 23, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+
+.notice-box {
+  position: relative;
+  background: var(--white);
+  max-width: 440px;
+  width: 100%;
+  padding: 36px 32px 28px;
+  border-radius: 4px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.notice-eyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin-bottom: 8px;
+}
+
+.notice-box h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 1.15;
+  margin: 0 0 16px;
+}
+
+.notice-box p {
+  color: var(--ink-soft);
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+
+.notice-box .btn {
+  margin-top: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+.notice-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink-soft);
+}
