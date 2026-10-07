@@ -21,9 +21,29 @@ function matchesState(p) {
   return true;
 }
 
+function isSoldOut(p) {
+  const total = Array.isArray(p.sizes) ? p.sizes.reduce((sum, s) => sum + (s.stock || 0), 0) : (p.stock || 0);
+  return total <= 0;
+}
+
+function shuffled(list) {
+  const a = [...list];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Random order on every page load, with sold products last. Fixed once per load so filtering doesn't reshuffle.
+let catalogOrder = [];
+
 function renderGrid() {
   const grid = document.getElementById("catalog-grid");
-  const results = PRODUCTS.filter(matchesState);
+  if (!catalogOrder.length) {
+    catalogOrder = [...shuffled(PRODUCTS.filter((p) => !isSoldOut(p))), ...shuffled(PRODUCTS.filter(isSoldOut))];
+  }
+  const results = catalogOrder.filter(matchesState);
   if (results.length === 0) {
     grid.innerHTML = '<div class="empty-note">No products match those filters yet.</div>';
     return;
