@@ -30,13 +30,14 @@ function shuffled(list) {
   return a;
 }
 
-// Random order on every page load (sold products included). Fixed once per load so filtering doesn't reshuffle.
+// Random order on every page load (sold products included), products with photos first. Fixed once per load so filtering doesn't reshuffle.
 let catalogOrder = [];
 
 function renderGrid() {
   const grid = document.getElementById("catalog-grid");
   if (!catalogOrder.length) {
-    catalogOrder = shuffled(PRODUCTS);
+    const hasPhoto = (p) => p.images && p.images.length;
+    catalogOrder = [...shuffled(PRODUCTS.filter(hasPhoto)), ...shuffled(PRODUCTS.filter((p) => !hasPhoto(p)))];
   }
   const results = catalogOrder.filter(matchesState);
   if (results.length === 0) {

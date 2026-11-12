@@ -4,7 +4,7 @@ function getProductFromURL() {
   return PRODUCTS.find((p) => p.id === id);
 }
 
-const pdState = { color: "", size: "", qty: 1, activeImage: 0 };
+const pdState = { color: "", size: "", qty: 1 };
 
 function renderNotFound() {
   document.getElementById("product-root").innerHTML = `
@@ -16,87 +16,54 @@ function renderNotFound() {
 }
 
 function renderProduct(p) {
-  pdState.color = p.colors[0] || "";
-  
-  // Handle size format: array of objects { size, stock }
-  const sizeOptions = p.sizes || [];
-  pdState.size = sizeOptions.length > 0 ? sizeOptions[0].size : "";
-  
+  const entries = p.sizes || [];
+  const colors = p.colors || [];
+  const images = p.images && p.images.length ? p.images : ["images/placeholder.svg"];
+
+  // Stock for a color (entries without a color count for every color) and the sizes offered in it
+  const colorStock = (c) =>
+    entries.filter((s) => !s.color || !c || s.color === c).reduce((n, s) => n + (s.stock || 0), 0);
+  const sizesFor = (c) => {
+    const list = [];
+    entries.forEach((s) => {
+      if (s.color && c && s.color !== c) return;
+      const hit = list.find((x) => x.size === s.size);
+      if (hit) hit.stock += s.stock || 0;
+      else list.push({ size: s.size, stock: s.stock || 0 });
+    });
+    return list;
+  };
+  const firstInStockSize = (c) => {
+    const hit = sizesFor(c).find((s) => s.stock > 0);
+    return hit ? hit.size : "";
+  };
+
+  const isSold = entries.reduce((n, s) => n + (s.stock || 0), 0) <= 0;
+
+  pdState.color = colors.find((c) => colorStock(c) > 0) || colors[0] || "";
+  pdState.size = firstInStockSize(pdState.color);
   pdState.qty = 1;
 
-  const images = p.images && p.images.length ? p.images : ["images/placeholder.svg"];
-  const alreadyInCart = qtyInCartForProduct(getCart(), p.id);
-  
-  // Total remaining stock for this product
-  const totalStock = sizeOptions.reduce((sum, s) => sum + s.stock, 0);
-  const remaining = Math.max(0, totalStock - alreadyInCart);
-  const isSold = totalStock <= 0;
-  const soldOut = isSold || remaining <= 0;
+  const colorChips =
+    !isSold && colors.length
+      ? `<div class="option-group">
+          <div class="option-label">Color</div>
+          <div class="chip-row" id="color-chips">
+            ${colors
+              .map((c) => {
+                const out = colorStock(c) <= 0;
+                return `<button class="chip${c === pdState.color ? " selected" : ""}" data-color="${c}"${out ? ' style="opacity:0.4;"' : ""}>${c}</button>`;
+              })
+              .join("")}
+          </div>
+        </div>`
+      : "";
 
-  // Color chips
-  const colorChips = !isSold && p.colors.length
-    ? `<div class="option-group">
-        <div class="option-label">Color</div>
-        <div class="chip-row" id="color-chips">
-          ${p.colors.map((c, i) => `<button class="chip${i === 0 ? " selected" : ""}" data-color="${c}">${c}</button>`).join("")}
-        </div>
-      </div>`
+  const badgeHTML = isSold
+    ? `<span style="background:#222; color:#fff; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">Sold</span>`
+    : p.badge
+    ? `<span style="background:#e8f5e9; color:#2e7d32; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">${p.badge}</span>`
     : "";
-
-  // Size chips — out of stock = locked (greyed, not clickable, no pointer events)
-  const sizeChips = !isSold && sizeOptions.length
-    ? `<div class="option-group">
-        <div class="option-label">Size (Waist/Inseam)</div>
-        <div class="chip-row size-chip-row" id="size-chips">
-          ${sizeOptions.map((s, i) => {
-            const isOutOfStock = s.stock <= 0;
-            return `
-              <button 
-                class="chip${i === 0 && !isOutOfStock ? " selected" : ""} ${isOutOfStock ? "locked" : ""}" 
-                data-size="${s.size}" 
-                data-stock="${s.stock}"
-                ${isOutOfStock ? 'disabled style="opacity:0.3; cursor:not-allowed; pointer-events:none;"' : ''}
-              >
-                ${s.size}
-              </button>
-            `;
-          }).join("")}
-        </div>
-        <div style="margin-top:8px; font-size:12px; color:var(--ink-soft);">${sizeOptions.filter((s) => s.stock > 0).length} sizes available</div>
-      </div>`
-    : "";
-
-  // Get available stock for selected size
-  function getSelectedSizeStock() {
-    const selected = sizeOptions.find(s => s.size === pdState.size);
-    return selected ? selected.stock : 0;
-  }
-
-  const selectedStock = getSelectedSizeStock();
-  const maxQty = Math.min(remaining, selectedStock);
-
-  // Stock note logic
-  let stockNote;
-  if (isSold) {
-    stockNote = "This piece has been sold. Message us on WhatsApp if you'd like something similar.";
-  } else if (soldOut) {
-    stockNote = "Currently sold out. Check back soon or ask us on WhatsApp.";
-  } else if (remaining <= 3) {
-    stockNote = `Only ${remaining} left in stock — order soon!`;
-  } else {
-    stockNote = "In stock — usually confirmed within a few hours over WhatsApp.";
-  }
-
-  // Badge — dynamic from product data
-  const badgeHTML = isSold ? `
-    <span style="background:#222; color:#fff; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">
-      Sold
-    </span>
-  ` : p.badge ? `
-    <span style="background:#e8f5e9; color:#2e7d32; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;">
-      ${p.badge}
-    </span>
-  ` : '';
 
   document.getElementById("product-root").innerHTML = `
     <div class="product-detail">
@@ -114,36 +81,12 @@ function renderProduct(p) {
         <div class="pd-cat">${p.category} &middot; ${p.subCategory} &middot; ${p.gender}</div>
         <h1 class="pd-name">${p.name}</h1>
         ${isSold ? "" : `<div class="pd-price">Rs. ${p.price.toLocaleString("en-LK")}</div>`}
-
-        <!-- Dynamic Badge -->
         ${badgeHTML}
-
         <p class="pd-desc">${p.description}</p>
         ${colorChips}
-        ${sizeChips}
-
-        ${isSold ? "" : `<div class="option-group">
-          <div class="option-label">Quantity</div>
-          <div class="qty-row">
-            <div class="qty-control">
-              <button id="qty-minus" aria-label="Decrease quantity" ${soldOut || maxQty <= 0 ? "disabled" : ""}>&minus;</button>
-              <span id="qty-value">${soldOut || maxQty <= 0 ? 0 : 1}</span>
-              <button id="qty-plus" aria-label="Increase quantity" ${soldOut || maxQty <= 1 ? "disabled" : ""}>&plus;</button>
-            </div>
-          </div>
-        </div>`}
-
-        <div class="pd-actions">
-          ${!soldOut && maxQty > 0
-            ? `<button class="btn clay" id="add-to-cart-btn">Add to bag</button>`
-            : `<button class="btn secondary" disabled>${isSold ? "Sold" : soldOut ? "Sold out" : "No stock for this size"}</button>`}
-          <a href="catalog.html" class="btn secondary">Keep browsing</a>
-        </div>
-        <p class="stock-note" id="stock-note">${stockNote}</p>
+        <div id="variant-panel"></div>
       </div>
     </div>`;
-
-  // ----- Event Listeners -----
 
   // Thumbnails
   document.querySelectorAll(".pd-thumbs img").forEach((thumb) => {
@@ -153,8 +96,6 @@ function renderProduct(p) {
       thumb.classList.add("active");
     });
   });
-  
-  // Set first thumb as active
   const firstThumb = document.querySelector(".pd-thumbs img");
   if (firstThumb) firstThumb.classList.add("active");
 
@@ -162,111 +103,119 @@ function renderProduct(p) {
   document.querySelectorAll("#color-chips .chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       pdState.color = chip.dataset.color;
+      pdState.size = firstInStockSize(pdState.color);
+      pdState.qty = 1;
       document.querySelectorAll("#color-chips .chip").forEach((c) => c.classList.toggle("selected", c === chip));
+      renderVariantPanel();
     });
   });
 
-  // Size chips — only clickable if in stock
-  document.querySelectorAll("#size-chips .chip:not(.locked)").forEach((chip) => {
-    chip.addEventListener("click", () => {
-      const newStock = parseInt(chip.dataset.stock);
-      if (newStock <= 0) return;
-      
-      pdState.size = chip.dataset.size;
-      document.querySelectorAll("#size-chips .chip").forEach((c) => c.classList.toggle("selected", c === chip));
-      
-      // Update max quantity based on selected size
-      const maxQty = Math.min(remaining, newStock);
-      const qtyValueEl = document.getElementById("qty-value");
-      const qtyPlusBtn = document.getElementById("qty-plus");
-      const qtyMinusBtn = document.getElementById("qty-minus");
-      
-      pdState.qty = Math.min(pdState.qty, maxQty);
-      if (qtyValueEl) qtyValueEl.textContent = maxQty > 0 ? pdState.qty : 0;
-      if (qtyPlusBtn) qtyPlusBtn.disabled = maxQty <= 1 || pdState.qty >= maxQty;
-      if (qtyMinusBtn) qtyMinusBtn.disabled = maxQty <= 0;
-      
-      // Update stock note
-      const stockNote = document.getElementById("stock-note");
-      const addBtn = document.getElementById("add-to-cart-btn");
-      
-      if (maxQty <= 0) {
-        if (addBtn) {
-          addBtn.outerHTML = `<button class="btn secondary" disabled>No stock for this size</button>`;
-        }
-        if (stockNote) stockNote.textContent = "This size is out of stock. Please select another size.";
-      } else {
-        if (!document.querySelector("#add-to-cart-btn")) {
-          const actionsDiv = document.querySelector(".pd-actions");
-          const keepBrowsing = actionsDiv.querySelector(".btn.secondary");
-          actionsDiv.innerHTML = `
-            <button class="btn clay" id="add-to-cart-btn">Add to bag</button>
-            ${keepBrowsing.outerHTML}
-          `;
-          document.getElementById("add-to-cart-btn").addEventListener("click", addToCartHandler);
-        }
-        if (stockNote) {
-          if (maxQty <= 3) {
-            stockNote.textContent = `Only ${maxQty} left in stock for this size — order soon!`;
-          } else {
-            stockNote.textContent = "In stock — usually confirmed within a few hours over WhatsApp.";
-          }
-        }
-      }
-    });
-  });
-
-  // Quantity controls
-  const qtyValueEl = document.getElementById("qty-value");
-  const qtyMinusBtn = document.getElementById("qty-minus");
-  const qtyPlusBtn = document.getElementById("qty-plus");
-
-  if (qtyMinusBtn) {
-    qtyMinusBtn.addEventListener("click", () => {
-      pdState.qty = Math.max(1, pdState.qty - 1);
-      qtyValueEl.textContent = pdState.qty;
-      if (qtyPlusBtn) qtyPlusBtn.disabled = pdState.qty >= maxQty;
-      if (qtyMinusBtn) qtyMinusBtn.disabled = pdState.qty <= 1;
-    });
-  }
-  
-  if (qtyPlusBtn) {
-    qtyPlusBtn.addEventListener("click", () => {
-      if (pdState.qty >= maxQty) return;
-      pdState.qty += 1;
-      qtyValueEl.textContent = pdState.qty;
-      qtyPlusBtn.disabled = pdState.qty >= maxQty;
-      if (qtyMinusBtn) qtyMinusBtn.disabled = false;
-    });
-  }
-
-  // Add to cart handler
-  function addToCartHandler() {
-    const selectedSizeData = sizeOptions.find(s => s.size === pdState.size);
-    if (!selectedSizeData || selectedSizeData.stock <= 0) {
-      alert("This size is out of stock. Please select another size.");
+  // Sizes, quantity, add-to-bag button and stock note: rebuilt whenever color/size/bag changes
+  function renderVariantPanel(message) {
+    const panel = document.getElementById("variant-panel");
+    if (isSold) {
+      panel.innerHTML = `
+        <div class="pd-actions">
+          <button class="btn secondary" disabled>Sold</button>
+          <a href="catalog.html" class="btn secondary">Keep browsing</a>
+        </div>
+        <p class="stock-note">This piece has been sold. Message us on WhatsApp if you'd like something similar.</p>`;
       return;
     }
-    
-    const result = addToCart(p, pdState.color, pdState.size, pdState.qty);
-    const noteEl = document.getElementById("stock-note");
-    
-    if (result.added === 0) {
-      if (noteEl) noteEl.textContent = "None available to add — you already have the full stock in your bag.";
-      return;
+
+    const color = pdState.color;
+    const sizes = sizesFor(color);
+    const inColor = colorStock(color);
+    const selectedStock = sizes.find((s) => s.size === pdState.size)?.stock || 0;
+    const inBag = qtyInCartForVariant(getCart(), p.id, color, pdState.size);
+    const maxQty = Math.max(0, selectedStock - inBag);
+    pdState.qty = maxQty > 0 ? Math.min(Math.max(1, pdState.qty), maxQty) : 1;
+
+    const hasWaistInseam = sizes.some((s) => String(s.size).includes("/"));
+    const inStockSizes = sizes.filter((s) => s.stock > 0).length;
+    const sizeChips = sizes.length
+      ? `<div class="option-group">
+          <div class="option-label">Size${hasWaistInseam ? " (Waist/Inseam)" : ""}</div>
+          <div class="chip-row size-chip-row" id="size-chips">
+            ${sizes
+              .map((s) => {
+                const out = s.stock <= 0;
+                return `<button class="chip${s.size === pdState.size ? " selected" : ""}${out ? " locked" : ""}" data-size="${s.size}"${out ? ' disabled style="opacity:0.3; cursor:not-allowed; pointer-events:none;"' : ""}>${s.size}</button>`;
+              })
+              .join("")}
+          </div>
+          <div style="margin-top:8px; font-size:12px; color:var(--ink-soft);">${inStockSizes} size${inStockSizes === 1 ? "" : "s"} available</div>
+        </div>`
+      : "";
+
+    let button;
+    let note;
+    if (maxQty > 0) {
+      button = `<button class="btn clay" id="add-to-cart-btn">Add to bag</button>`;
+      note = maxQty <= 3
+        ? `Only ${maxQty} left in stock${sizes.length > 1 ? " for this size" : ""} — order soon!`
+        : "In stock — usually confirmed within a few hours over WhatsApp.";
+    } else if (inColor <= 0) {
+      button = `<button class="btn secondary" disabled>Sold out in this colour</button>`;
+      note = "This colour is sold out. Please pick another colour or ask us on WhatsApp.";
+    } else if (selectedStock <= 0) {
+      button = `<button class="btn secondary" disabled>No stock for this size</button>`;
+      note = "This size is out of stock. Please select another size.";
+    } else {
+      button = `<button class="btn secondary" disabled>All available are in your bag</button>`;
+      note = "You already have all the available stock for this size in your bag.";
     }
-    if (result.capped && noteEl) {
-      noteEl.textContent = `Only ${result.added} could be added — that was the last of the available stock.`;
+    if (message) note = message;
+
+    panel.innerHTML = `
+      ${sizeChips}
+      <div class="option-group">
+        <div class="option-label">Quantity</div>
+        <div class="qty-row">
+          <div class="qty-control">
+            <button id="qty-minus" aria-label="Decrease quantity" ${maxQty <= 0 || pdState.qty <= 1 ? "disabled" : ""}>&minus;</button>
+            <span id="qty-value">${maxQty > 0 ? pdState.qty : 0}</span>
+            <button id="qty-plus" aria-label="Increase quantity" ${maxQty <= 0 || pdState.qty >= maxQty ? "disabled" : ""}>&plus;</button>
+          </div>
+        </div>
+      </div>
+      <div class="pd-actions">
+        ${button}
+        <a href="catalog.html" class="btn secondary">Keep browsing</a>
+      </div>
+      <p class="stock-note" id="stock-note">${note}</p>`;
+
+    document.querySelectorAll("#size-chips .chip:not(.locked)").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        pdState.size = chip.dataset.size;
+        pdState.qty = 1;
+        renderVariantPanel();
+      });
+    });
+
+    const minus = document.getElementById("qty-minus");
+    const plus = document.getElementById("qty-plus");
+    if (minus) minus.addEventListener("click", () => { pdState.qty = Math.max(1, pdState.qty - 1); renderVariantPanel(); });
+    if (plus) plus.addEventListener("click", () => { pdState.qty = Math.min(maxQty, pdState.qty + 1); renderVariantPanel(); });
+
+    const add = document.getElementById("add-to-cart-btn");
+    if (add) {
+      add.addEventListener("click", () => {
+        const result = addToCart(p, pdState.color, pdState.size, pdState.qty);
+        pdState.qty = 1;
+        openDrawer();
+        renderVariantPanel(
+          result.added === 0
+            ? "None available to add — you already have the full stock in your bag."
+            : result.capped
+            ? `Only ${result.added} could be added — that was the last of the available stock.`
+            : ""
+        );
+      });
     }
-    openDrawer();
-    renderProduct(p);
   }
 
-  // Bind add to cart
-  const addBtn = document.getElementById("add-to-cart-btn");
-  if (addBtn) {
-    addBtn.addEventListener("click", addToCartHandler);
-  }
+  renderVariantPanel();
 }
 
 // Keep only the listed images that actually exist, so a folder with 1 or 2 photos shows 1 or 2.

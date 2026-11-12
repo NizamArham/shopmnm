@@ -3,8 +3,8 @@
   Change WHATSAPP_NUMBER below if the order number ever changes.
 
   STOCK CAPPING
-  Each product in data.js has sizes array with per-size stock.
-  addToCart() checks the selected size's stock and caps accordingly.
+  Each product in data.js has a sizes array with stock per color + size.
+  addToCart() checks that variant's stock and caps accordingly.
 */
 
 const WHATSAPP_NUMBER = "94705500174"; // no + or leading 0
@@ -27,48 +27,38 @@ function cartLineKey(productId, color, size) {
 }
 
 /**
- * Get total quantity in cart for a specific product + size combination
+ * Quantity already in the cart for one product + color + size.
  */
-function qtyInCartForSize(cart, productId, size) {
+function qtyInCartForVariant(cart, productId, color, size) {
   return cart
-    .filter((line) => line.productId === productId && line.size === size)
+    .filter((line) => line.productId === productId && line.size === (size || "") && (line.color || "") === (color || ""))
     .reduce((sum, line) => sum + line.qty, 0);
 }
 
 /**
- * Get total quantity in cart for a product (all sizes)
+ * Stock for one size in one color. A size entry with no color applies to every color.
  */
-function qtyInCartForProduct(cart, productId) {
-  return cart
-    .filter((line) => line.productId === productId)
-    .reduce((sum, line) => sum + line.qty, 0);
-}
-
-/**
- * Get stock for a specific size from product
- */
-function getSizeStock(product, size) {
+function getVariantStock(product, color, size) {
   if (!product.sizes || !Array.isArray(product.sizes)) return 0;
-  const found = product.sizes.find(s => s.size === size);
-  return found ? found.stock : 0;
+  return product.sizes
+    .filter((s) => s.size === size && (!s.color || !color || s.color === color))
+    .reduce((sum, s) => sum + (s.stock || 0), 0);
 }
 
 /**
- * Adds a product/variant to the cart, capped at the size's stock.
+ * Adds a product variant to the cart, capped at that color + size's stock.
  * Returns { added, capped, remaining, sizeStock }
  */
 function addToCart(product, color, size, qty) {
   const cart = getCart();
-  
-  // Get stock for this specific size
-  const sizeStock = getSizeStock(product, size);
+
+  const sizeStock = getVariantStock(product, color, size);
   if (sizeStock <= 0) {
     return { added: 0, capped: true, remaining: 0, sizeStock: 0 };
   }
-  
-  // How many of this size are already in cart?
-  const alreadyInCartForSize = qtyInCartForSize(cart, product.id, size);
-  const availableToAdd = Math.max(0, sizeStock - alreadyInCartForSize);
+
+  const alreadyInCart = qtyInCartForVariant(cart, product.id, color, size);
+  const availableToAdd = Math.max(0, sizeStock - alreadyInCart);
   const qtyToAdd = Math.min(qty, availableToAdd);
 
   if (qtyToAdd > 0) {
@@ -95,7 +85,7 @@ function addToCart(product, color, size, qty) {
   return {
     added: qtyToAdd,
     capped: qtyToAdd < qty,
-    remaining: Math.max(0, sizeStock - alreadyInCartForSize - qtyToAdd),
+    remaining: Math.max(0, sizeStock - alreadyInCart - qtyToAdd),
     sizeStock: sizeStock
   };
 }
@@ -126,6 +116,10 @@ function updateCartCount() {
   if (el) el.textContent = cartCount(getCart());
 }
 
+function esc(v) {
+  return String(v || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+}
+
 function renderDrawer() {
   const itemsEl = document.getElementById("drawer-items");
   const footEl = document.getElementById("drawer-foot");
@@ -153,7 +147,7 @@ function renderDrawer() {
             <div class="drawer-item-meta">${meta ? meta + " &middot; " : ""}Qty ${line.qty}</div>
             <div class="drawer-item-row">
               <span class="drawer-item-price">${formatLKR(line.price * line.qty)}</span>
-              <a href="#" class="remove-link" onclick="removeFromCart('${line.productId}','${line.color}','${line.size}');return false;">Remove</a>
+              <a href="#" class="remove-link" onclick="removeFromCart('${line.productId}','${esc(line.color)}','${esc(line.size)}');return false;">Remove</a>
             </div>
           </div>
         </div>`;
